@@ -1,0 +1,3 @@
+This is textB2.txt inside folderB.
+It contains notes for prompt engineering and system instructions.
+EnigmaBlitz compiles all your selected files effortlessly.
