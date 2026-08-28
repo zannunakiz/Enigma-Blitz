@@ -205,3 +205,99 @@ Distributed under the **Tralalero Tralala License**.
 ---
 
 Made by **Richky Abednego**
+---
+
+## 🐍 Enigma Blitz 2.0: single python version available
+
+No Next.js needed — EnigmaBlitz is also packaged as a **single standalone Python script**, `EB.py`. Drop it into the **root of any project** (right next to your `package.json` or `.env`), run one command, and it compiles the files you pick into a clean, ready-to-paste `EB.txt` context blob — the same format the web UI produces.
+
+Unlike the web version (which reads only `PROJECT_CONTEXT`), the Python CLI scans your **whole project** from wherever `EB.py` sits, so you can grab real source files anywhere in the tree.
+
+### ✅ Requirements
+
+- Python **3.7+** (no third-party packages — pure standard library)
+
+### 🚀 Quick start
+
+```bash
+python EB.py --file page.tsx layout.tsx
+```
+
+This creates `EB.txt` (in the same folder as `EB.py`) containing the rendered context for both files.
+
+### 🔧 Usage
+
+| Command | Description |
+| ------- | ----------- |
+| `--file <name-or-path>` | Select one file. Repeatable / space-separated. |
+| `--folder <path>` | Select **every** non-ignored file inside a folder, alphabetically ordered. |
+| `-h` / `--help` | Show usage documentation. |
+
+Flags can be combined and interleaved in one command:
+
+```bash
+python EB.py --file random.txt SelectionPanel.tsx --folder PROJECT_CONTEXT/folderB
+```
+
+### 🧠 Smart file resolution
+
+If multiple files share the same **name**, `EB.py` resolves them by these rules:
+
+- **Bare name** → picks the **top-most (shallowest)** match.
+  ```bash
+  python EB.py --file page.tsx          # resolves app/page.tsx (NOT app/dummy/page.tsx)
+  ```
+- **Explicit path** → you pick exactly which one, and both can be included together.
+  ```bash
+  python EB.py --file page.tsx app/dummy/page.tsx   # includes BOTH files
+  ```
+- **Unique name** → works from anywhere, with or without a path.
+  ```bash
+  python EB.py --file unique.tsx            # resolves app/dummy/unique.tsx
+  python EB.py --file app/dummy/unique.tsx  # same result
+  ```
+
+### 🧹 Ignored paths
+
+By default `EB.py` skips gitignore-style entries while scanning — edit the `DEFAULT_IGNORE` list at the top of `EB.py` to customize:
+
+```python
+DEFAULT_IGNORE = [
+    "node_modules",     # match by name at any depth
+    "*.log",            # glob patterns
+    "src/legacy",       # exact relative path (and its children)
+    "# comments",       # lines starting with # are ignored
+]
+```
+
+Entries starting with `#` are treated as comments. Folders and files matching these names are not picked up by `--folder` and are not listed as bare-name candidates — so `node_modules`, `.git`, `.next`, etc. are never rendered.
+
+### 📄 Output format
+
+`EB.txt` uses the exact same template as the EnigmaBlitz frontend:
+
+```text
+File 1: root/app/page.tsx:
+'use client';
+...
+
+
+File 2: root/components/SelectionPanel.tsx:
+...
+
+
+{Context end}
+```
+
+Each file gets a `File N: root/<rel-path>:` header followed by its raw content, blocks are separated by a blank line, and the blob closes with `{Context end}`.
+
+### 🖥️ Console output
+
+While running, `EB.py` logs each file it renders and a final summary:
+
+```text
+Rendering file: root/app/page.tsx
+Rendering file: root/app/dummy/page.tsx
+--------------------------------------------------
+Compiled 2 file(s) into: C:\...\EB.txt
+```
