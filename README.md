@@ -21,6 +21,16 @@
 
 ---
 
+## 📊 Overview
+
+<p align="center">
+  <img src="public/Overview.png" alt="EnigmaBlitz System Architecture Overview" width="100%" />
+</p>
+
+> Flash Context Compiler flow: `PROJECT_CONTEXT/` → Next.js Web UI (FolderExplorer + SelectionPanel) → API Layer (`/api/fs`, `/api/context`) → Core Engine (`lib/file-system.ts`) → `Context.txt` → Preview Modal (Copy / Download) → ChatGPT / Claude / Gemini / DeepSeek. Standalone `EB.py` CLI mirrors the same pipeline into `EB.txt` — 100% local-first.
+
+---
+
 ## 🧠 What is EnigmaBlitz?
 
 EnigmaBlitz is a lightweight **local-first context helper** for prompt engineering. Working with an AI like ChatGPT, Claude, Gemini, or DeepSeek and tired of copy-pasting each file one by one? EnigmaBlitz compiles all the files you select into a single, well-formatted `Context.txt` — ready to paste straight into your favorite AI's context window.
